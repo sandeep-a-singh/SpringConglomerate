@@ -1,0 +1,143 @@
+<configuration>
+
+  <property name="LOG_PATTERN"
+    value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %thread%n traceId %X{traceId:-?} spanId %X{spanId:-?} %p %m%n"/>
+  <property name="APP_LOG_ROOT" value="${LOG_PATH:-.}"/>
+
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="applicationLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${APP_LOG_ROOT}/application.log</file>
+    <encoder>
+      <pattern>${LOG_PATTERN}</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${APP_LOG_ROOT}/application-%i.log</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>10</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>10MB</maxFileSize>
+    </triggeringPolicy>
+  </appender>
+
+  <appender name="request" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${APP_LOG_ROOT}/application-req.log</file>
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${APP_LOG_ROOT}/application-tran-%i.log</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>10</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>10MB</maxFileSize>
+    </triggeringPolicy>
+  </appender>
+
+  <appender name="dao" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${APP_LOG_ROOT}/application-dao.log</file>
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${APP_LOG_ROOT}/application-trace-%i.log</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>10</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>10MB</maxFileSize>
+    </triggeringPolicy>
+  </appender>
+
+  <appender name="warningLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>WARN</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <file>${APP_LOG_ROOT}/warning.log</file>
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${APP_LOG_ROOT}/warning-%i.log</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>10</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>10MB</maxFileSize>
+    </triggeringPolicy>
+  </appender>
+
+  <appender name="debugLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>DEBUG</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <file>${APP_LOG_ROOT}/debug.log</file>
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${APP_LOG_ROOT}/debug-%i.log</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>10</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>10MB</maxFileSize>
+    </triggeringPolicy>
+  </appender>
+
+  <appender name="errorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>ERROR</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <file>${APP_LOG_ROOT}/error.log</file>
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${APP_LOG_ROOT}/error-%i.log</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>10</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>10MB</maxFileSize>
+    </triggeringPolicy>
+  </appender>
+
+  <logger name="com.sunny.apps.weather" level="ALL">
+    <appender-ref ref="applicationLog"/>
+    <appender-ref ref="console"/>
+  </logger>
+
+  <logger name="com.sunny.apps.weather.dao" level="INFO">
+    <appender-ref ref="dao"/>
+    <appender-ref ref="console"/>
+  </logger>
+
+
+  <logger name="com.sunny.apps.weather.interceptor" level="INFO">
+    <appender-ref ref="request"/>
+    <appender-ref ref="console"/>
+  </logger>
+
+  <logger name="com.sunny" level="DEBUG">
+    <appender-ref ref="debugLog"/>
+    <appender-ref ref="console"/>
+  </logger>
+
+  <logger name="com.sunny" level="WARN">
+    <appender-ref ref="warningLog"/>
+    <appender-ref ref="console"/>
+  </logger>
+
+  <logger name="com.sunny" level="ERROR">
+    <appender-ref ref="errorLog"/>
+    <appender-ref ref="console"/>
+  </logger>
+
+  <root level="info">
+    <appender-ref ref="console"/>
+  </root>
+
+</configuration>

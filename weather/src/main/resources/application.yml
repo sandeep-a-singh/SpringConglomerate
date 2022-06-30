@@ -1,0 +1,11 @@
+weather:
+  rapid:
+    api:
+      key: 44abb26b40msh74f32c0c7d46dc1p170849jsn023d4ab03d08
+      host: community-open-weather-map.p.rapidapi.com
+      base:
+        url: https://community-open-weather-map.p.rapidapi.com/
+
+logging:
+  file:
+    path: "../../logs"

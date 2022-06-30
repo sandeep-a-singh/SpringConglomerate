@@ -1,0 +1,7 @@
+server:
+  servlet:
+    context-path: /logging
+
+logging:
+  file:
+    path: "../../logs"
