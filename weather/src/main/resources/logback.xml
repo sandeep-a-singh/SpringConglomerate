@@ -12,8 +12,22 @@
 
   <appender name="applicationLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${APP_LOG_ROOT}/application.log</file>
-    <encoder>
-      <pattern>${LOG_PATTERN}</pattern>
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <fieldNames>
+        <timestamp>timestamp</timestamp>
+        <thread>[ignore]</thread>
+        <level>[ignore]</level>
+        <callerClass>class</callerClass>
+        <callerMethod>method</callerMethod>
+        <callerLine>line</callerLine>
+        <mdc>mdc</mdc>
+        <tags>tags</tags>
+        <arguments>arguments</arguments>
+        <context>context</context>
+        <stackTrace>exception</stackTrace>
+      </fieldNames>
+      <includeCallerData>true</includeCallerData>
+      <jsonGeneratorDecorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
       <fileNamePattern>${APP_LOG_ROOT}/application-%i.log</fileNamePattern>
