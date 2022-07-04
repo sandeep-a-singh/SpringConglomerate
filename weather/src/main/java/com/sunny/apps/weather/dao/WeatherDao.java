@@ -41,7 +41,10 @@ public class WeatherDao {
     ResponseEntity<RapidAPIResponse> apiResponse = rapidAPITemplate.exchange("/weather?q=" + city, HttpMethod.GET, entity, RapidAPIResponse.class);
 
     //RapidAPIResponse apiResponse = rapidAPITemplate.getForObject("/weather?q=" + city, RapidAPIResponse.class);
-
+    if (apiResponse == null || !apiResponse.getStatusCode().is2xxSuccessful()) {
+      LOGGER.error("Unable to get response ",apiResponse);
+      throw new RuntimeException("Invalid Response");
+    }
     return converter.convert(apiResponse.getBody());
   }
 
